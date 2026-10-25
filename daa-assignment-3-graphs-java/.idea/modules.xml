@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/daa-assignment-3-graphs-java.iml" filepath="$PROJECT_DIR$/daa-assignment-3-graphs-java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/daa-assignment-3-graphs-java2.iml" filepath="$PROJECT_DIR$/src/daa-assignment-3-graphs-java2.iml" />
+    </modules>
+  </component>
+</project>

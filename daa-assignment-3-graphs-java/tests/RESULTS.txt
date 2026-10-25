@@ -1,0 +1,134 @@
+
+== Hand-made cases (expected answers derived by hand), sent to the real program ==
+PASS  dsu README example
+      why: 0-1 merges (3 comps, size 2); 1-2 -> size 3; repeat and self-union change nothing
+PASS  dsu n=0
+      why: empty graph: no operations, no states
+PASS  dsu n=1 self-union
+      why: single vertex, largest stays 1
+PASS  dsu n=3 no operations
+      why: no initial state is reported
+PASS  dsu chain of unions
+      why: {0,1},{2,3} -> {0,1,2,3} -> add 4
+PASS  kruskal README example
+      why: take 2 and 3, drop 4 (cycle); vertex 3 isolated -> 2 components
+PASS  prim README example
+      why: same graph; Prim must restart for isolate 3
+PASS  kruskal n=0
+      why: empty graph
+PASS  prim n=0
+      why: empty graph
+PASS  kruskal only isolates
+      why: 3 isolates
+PASS  prim only self-loops
+      why: negative self-loops must never be chosen
+PASS  kruskal negative loop + edge
+      why: loop skipped even though cheaper; only edge 1 connects
+PASS  prim parallel ties
+      why: parallel edges 1 and 2 tie at 2; either is optimal
+PASS  kruskal total > 32 bit
+      why: 3 edges of 1e9 = 3e9 > 2^31
+PASS  prim negative total beyond 32 bit
+      why: -1e9 + -1e9; edge of weight 7 is worse
+PASS  scc README example
+      why: 0<->1 form one SCC; 2 and 3 are singletons; chain {01}->{2}->{3}
+PASS  scc n=0
+      why: empty graph
+PASS  scc isolate + self-loop + duplicates
+      why: self-loop internal; three parallel 0->1 give ONE condensation pair
+PASS  scc one big cycle
+      why: a single 4-cycle is one SCC with no cross edges
+PASS  topo README example
+      why: any order with 0,1 before 2 before 3
+PASS  topo n=0
+      why: empty graph
+PASS  topo self-loop
+      why: self-loop is a cycle
+PASS  topo diamond (finished vertex is not a cycle)
+      why: 3 is reached twice; second visit hits a FINISHED vertex -> no cycle
+PASS  topo cycle in 2nd component
+      why: cycle 3<->4 away from vertex 0
+PASS  dag README example
+      why: 0->1->2 costs 3-7=-4 (beats 8); then +4 = 0; vertex 4 unreachable
+PASS  dag n=1
+      why: only the source
+PASS  dag cycle unreachable from source
+      why: cycle 2<->3 unreachable from 0 still makes the answer false
+PASS  dag self-loop
+      why: self-loop = cycle
+PASS  dag distance -1 is finite, not 'unreachable'
+      why: vertex 1 has cost -1; vertex 2 null
+PASS  dag unreachable vertex has negative edge
+      why: must NOT relax out of unreachable 2: vertex 3 stays null
+PASS  dag 64-bit distance
+      why: 3e9 exceeds 32 bits
+PASS  dag tied/parallel edges
+      why: edges 0,1 tie to vertex 1; edge 2 and path 0-1-2 tie at 4
+
+== Random small graphs vs brute-force oracles (seed=2026, 250 per task) ==
+PASS  random dsu: 250 cases
+PASS  random kruskal: 250 cases
+PASS  random prim: 250 cases
+PASS  random scc: 250 cases
+PASS  random topo: 250 cases
+PASS  random dag: 215 cases
+
+== Validator self-tests (alternative valid answer accepted, invalid witness rejected) ==
+PASS  forest: alternative tied edge accepted
+PASS  forest: wrong cost rejected
+PASS  forest: cycle (both parallel edges) rejected
+PASS  forest: duplicate id rejected
+PASS  scc: shifted labels accepted
+PASS  scc: merged SCCs rejected
+PASS  scc: duplicate condensation pair rejected
+PASS  scc: reversed condensation pair rejected
+PASS  topo: second valid order accepted
+PASS  topo: order violating an edge rejected
+PASS  topo: missing vertex rejected
+PASS  dag: alternative tied parents accepted
+PASS  dag: parent edge ending elsewhere rejected
+PASS  dag: parent edge that is not tight rejected
+PASS  dag: wrong distance rejected
+
+== Route helper calls: Algorithms.reconstructRoute (reachable, source, unreachable, tied/parallel) ==
+      reconstructRoute(0, 3) -> [0, 1, 2, 3], parent_edge=[-1, 0, 2, 3, -1], edge IDs used=[0, 2, 3], cost=0
+PASS  route to reachable target 3
+      reconstructRoute(0, 0) -> [0]
+PASS  route to the source itself is [source]
+      reconstructRoute(0, 4) -> []  (documented: unreachable target -> empty array)
+PASS  route to unreachable target is []
+      tied graph: parent_edge=[-1, 0, 2], reconstructRoute(0, 2) -> [0, 2], edge IDs=[2], cost=4
+PASS  tied/parallel route: direction and total weight verified
+      witness parent_edge=[-1, 0, 2] -> route [0, 2], edge IDs=[2], cost=4
+PASS  helper accepts alternative valid witness [-1, 0, 2]
+      witness parent_edge=[-1, 1, 3] -> route [0, 1, 2], edge IDs=[1, 3], cost=4
+PASS  helper accepts alternative valid witness [-1, 1, 3]
+PASS  helper rejects invalid witness (edge 0 ends at vertex 1, not 2) -> []
+
+== State reset: mixed tasks, repeated in one process (ping included) ==
+PASS  ping preserved
+PASS  three identical batches in one process give identical answers
+PASS  second dsu request does not see the first one's unions
+PASS  dag after a bigger graph: n=3 arrays only
+PASS  tiny requests after a huge one are unaffected
+
+== Full published limits (n=100000, m/q=250000) and deep chains, through the real program ==
+PASS  dsu full limit (1.26s)
+PASS  dsu chain of 99999 unions -> [1,100000] (0.80s)
+PASS  kruskal vs prim full limit agree: cost=-52825034977141, comps=658 (1.11s / 1.28s)
+PASS  kruskal and prim forests are valid
+PASS  scc full limit random digraph: 20266 SCCs, 26361 cross pairs (1.18s)
+PASS  topo full limit random DAG (1.00s)
+PASS  dag full limit random DAG matches independent DP (0.82s)
+PASS  topo deep chain 100000 (0.59s)
+PASS  topo deep chain closed into one cycle -> false (0.51s)
+PASS  scc one cycle of 100000 vertices -> single SCC (0.63s)
+PASS  scc deep chain: 100000 SCCs, 99999 condensation pairs (0.96s)
+PASS  dag deep chain with weight -1: distance[-1] == -99999 (0.77s)
+PASS  route helper on a 100000-vertex chain (iterative, no recursion)
+PASS  kruskal/prim on path of 100000 vertices (0.66s / 0.63s)
+PASS  total beyond 32 bit at scale: cost == 99999 * 1e9
+
+Wrote 32 hand-made requests to tests/my_cases.jsonl (run: python tools/run.py --input tests/my_cases.jsonl)
+
+SUMMARY: 80 passed, 0 failed
