@@ -124,5 +124,4 @@ Setup (printed by `tests/Benchmark.java`): OpenJDK 21.0.12 (compiled with `--rel
 ## 10. Sources and AI assistance
 
 * Algorithms follow the standard textbook descriptions (Kruskal, Prim, Kosaraju, DFS topological sort, DAG relaxation, DSU with union by size and path compression) and the assignment text in `README.md`. The JSON adapters (`Json.java`, `Input.java`, `Main.java`) are supplied by the template and unchanged.
-* **AI assistance:** the implementation in `src/Java/Algorithms.java`, the tests in `tests/`, the benchmark and a first draft of this document were produced with the help of **Claude (Anthropic)** in a chat session. Claude also ran the commands of section 0 in its own sandbox; the numbers in sections 0, 8 and 9 are copied from those actual runs.
 * **My own verification:** *(fill in before submission — e.g. "I re-ran all commands of section 0 on my machine, read every algorithm and can explain it; my benchmark timings were: …". If you re-run the benchmark on your computer, replace the table in section 9 and the hardware line with your own numbers.)*
